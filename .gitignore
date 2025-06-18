@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Node.js
+node_modules/
+pnpm-debug.log*
+
+# Slidev
+dist/
+.slidev/
+
+# IDE & OS
+.vscode/
+.DS_Store
+
+# Environment
+.env*
+
+# Cache
+.cache/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+EOF < /dev/null
