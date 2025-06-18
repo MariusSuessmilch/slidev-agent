@@ -193,4 +193,13 @@ def run_agent(topic_request: TopicRequest) -> AgentState:
     )
 
     result = graph.invoke(initial_state)
-    return result
+
+    # Convert the result dict back to AgentState
+    return AgentState(
+        request=result.get("request", topic_request),
+        outline=result.get("outline"),
+        slides=result.get("slides"),
+        deck=result.get("deck"),
+        error=result.get("error"),
+        metadata=result.get("metadata", {}),
+    )

@@ -48,9 +48,9 @@ class Settings(BaseSettings):
     """Main settings class that loads from environment."""
 
     # API Keys
-    openai_api_key: str = Field(..., description="OpenAI API key")
-    langsmith_api_key: Optional[str] = Field(
-        default=None, description="LangSmith API key"
+    openai_api_key: str = Field(default="", description="OpenAI API key")
+    langchain_api_key: Optional[str] = Field(
+        default=None, description="LangSmith API key", alias="langsmith_api_key"
     )
 
     # LangSmith Configuration
@@ -69,10 +69,12 @@ class Settings(BaseSettings):
     tracing: TracingConfig = Field(default_factory=TracingConfig)
     agent: AgentConfig = Field(default_factory=AgentConfig)
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        env_nested_delimiter = "__"
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "env_nested_delimiter": "__",
+        "extra": "ignore",
+    }
 
 
 def get_settings() -> Settings:
@@ -84,8 +86,8 @@ def setup_tracing() -> None:
     """Setup LangSmith tracing environment variables."""
     settings = get_settings()
 
-    if settings.langsmith_api_key:
-        os.environ["LANGCHAIN_API_KEY"] = settings.langsmith_api_key
+    if settings.langchain_api_key:
+        os.environ["LANGCHAIN_API_KEY"] = settings.langchain_api_key
 
     os.environ["LANGCHAIN_TRACING_V2"] = str(settings.langchain_tracing_v2).lower()
     os.environ["LANGCHAIN_PROJECT"] = settings.langchain_project
