@@ -327,7 +327,8 @@ jobs:
         run: |
           BASE_URL="${{ needs.deploy.outputs.page_url || 'https://mariussuessmilch.github.io/slidev-agent/' }}"
 
-          for demo in python-functions machine-learning web-development; do
+          # Test a few key presentations that should exist
+          for demo in python-functions python-funktionen data-science-basics machine-learning-basics; do
             URL="${BASE_URL}${demo}/"
             RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
             echo "${demo}: $RESPONSE"
