@@ -47,20 +47,20 @@ jobs:
       - name: Install dependencies and build Python Functions
         run: |
           cd slides/presentation-python-functions
-          nci
-          nr build --base /${{github.event.repository.name}}/python-functions/
+          npm install
+          npm run build -- --base /${{github.event.repository.name}}/python-functions/
 
       - name: Install dependencies and build Machine Learning
         run: |
           cd slides/presentation-machine-learning-grundlagen
-          nci
-          nr build --base /${{github.event.repository.name}}/machine-learning/
+          npm install
+          npm run build -- --base /${{github.event.repository.name}}/machine-learning/
 
       - name: Install dependencies and build Web Development
         run: |
           cd slides/presentation-web-development-basics
-          nci
-          nr build --base /${{github.event.repository.name}}/web-development/
+          npm install
+          npm run build -- --base /${{github.event.repository.name}}/web-development/
 
       - name: Create demo showcase
         run: |
