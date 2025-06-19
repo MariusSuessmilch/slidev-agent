@@ -1,0 +1,55 @@
+{
+  "title": "Presentation: Python Functions",
+  "subtitle": "For students audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 5,
+  "generated_at": "2025-06-19T12:09:31.206990",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-python-functions",
+  "slides": [
+    {
+      "title": "Introduction to Python Functions",
+      "type": "title",
+      "notes": "Generated for topic: Python Functions",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Understanding Python Functions",
+      "type": "bullets",
+      "notes": "Generated for topic: Python Functions",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Creating Your First Python Function",
+      "type": "code",
+      "notes": "Generated for topic: Python Functions",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Benefits of Using Functions in Python",
+      "type": "bullets",
+      "notes": "Generated for topic: Python Functions",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Summary and Next Steps",
+      "type": "quote",
+      "notes": "Generated for topic: Python Functions",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Python Functions",
+    "slide_count": 5,
+    "language": "en"
+  }
+}

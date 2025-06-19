@@ -87,5 +87,3 @@ class: text-center
 - Zukünftige Trends: stärkere Personalisierung und ethische KI.
 - KI wird zunehmend in Medizin, Bildung und Automatisierung integriert.
 - Lassen Sie sich von der Möglichkeit einer intelligenten Zukunft inspirieren!
-
-

@@ -72,12 +72,20 @@ def main(
                 # Show filesystem results
                 if result.metadata.get("slides_written"):
                     output_path = result.metadata.get("output_path")
-                    console.print(f"📁 Files written to: [bold green]{output_path}[/bold green]")
+                    console.print(
+                        f"📁 Files written to: [bold green]{output_path}[/bold green]"
+                    )
 
                     fs_result = result.metadata.get("filesystem_result", {})
-                    console.print(f"📄 Main file: {fs_result.get('slides_file', 'index.md')}")
-                    console.print(f"📊 Metadata: {fs_result.get('meta_file', 'meta.json')}")
-                    console.print(f"📦 Package: {fs_result.get('package_file', 'package.json')}")
+                    console.print(
+                        f"📄 Main file: {fs_result.get('slides_file', 'index.md')}"
+                    )
+                    console.print(
+                        f"📊 Metadata: {fs_result.get('meta_file', 'meta.json')}"
+                    )
+                    console.print(
+                        f"📦 Package: {fs_result.get('package_file', 'package.json')}"
+                    )
 
                     size_kb = fs_result.get("size_bytes", 0) / 1024
                     console.print(f"💾 Size: {size_kb:.1f} KB")
@@ -85,7 +93,9 @@ def main(
             console.print("⚠️  No deck generated")
 
         if not result.metadata.get("slides_written"):
-            console.print(f"\n💾 Output directory: {output_dir} (no files written due to error)")
+            console.print(
+                f"\n💾 Output directory: {output_dir} (no files written due to error)"
+            )
 
     except Exception as e:
         console.print(f"❌ Failed to generate slides: {e}")

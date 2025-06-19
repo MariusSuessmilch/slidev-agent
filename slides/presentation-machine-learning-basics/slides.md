@@ -118,5 +118,3 @@ Fortlaufendes Lernen und Anpassung sind entscheidend für den Erfolg.
 ML-Techniken erweitern die Möglichkeiten der Datenanalyse erheblich.
 
 — **Beitrag zur Datenwissenschaft**
-
-

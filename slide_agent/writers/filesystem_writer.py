@@ -41,7 +41,7 @@ class FilesystemWriter:
         self,
         deck: SlideDeck,
         output_dir: str | None = None,
-        create_assets_dir: bool = True
+        create_assets_dir: bool = True,
     ) -> dict[str, Any]:
         """Write slide deck to filesystem."""
         output_path = self.get_output_path(deck, output_dir)
@@ -121,27 +121,26 @@ class FilesystemWriter:
             "scripts": {
                 "build": "slidev build",
                 "dev": "slidev --open",
-                "export": "slidev export"
+                "export": "slidev export",
             },
             "dependencies": {
                 "@slidev/cli": "^51.8.1",
                 "@slidev/theme-default": "latest",
                 f"slidev-theme-{deck.theme}": "latest",
-                "vue": "^3.5.16"
+                "vue": "^3.5.16",
             },
-            "devDependencies": {
-                "playwright-chromium": "^1.53.0"
-            }
+            "devDependencies": {"playwright-chromium": "^1.53.0"},
         }
 
     def write_deck_sync(
         self,
         deck: SlideDeck,
         output_dir: str | None = None,
-        create_assets_dir: bool = True
+        create_assets_dir: bool = True,
     ) -> dict[str, Any]:
         """Synchronous version of write_deck."""
         import asyncio
+
         return asyncio.run(self.write_deck(deck, output_dir, create_assets_dir))
 
     def create_readme(self, deck: SlideDeck, output_path: Path) -> str:

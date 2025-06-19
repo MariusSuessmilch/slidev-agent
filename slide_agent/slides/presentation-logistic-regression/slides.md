@@ -191,5 +191,3 @@ class: text-center
 - Abschließende Gedanken:
   - Trotz Einfachheit kraftvoll und vielseitig
   - Essenziell für das Verständnis komplexer Modelle
-
-

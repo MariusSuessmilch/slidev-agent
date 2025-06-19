@@ -64,5 +64,3 @@ class: text-center
 - Datenbankentwicklung inspiriert Innovation und Fortschritt
 - Zukunftsorientierte Technologien eröffnen neue Möglichkeiten
 - Gestalten Sie die Zukunft mit kreativen Datenlösungen
-
-

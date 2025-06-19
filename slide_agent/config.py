@@ -57,10 +57,14 @@ class Settings(BaseSettings):
         default=True, description="Enable LangSmith tracing", alias="langsmith_tracing"
     )
     langchain_project: str = Field(
-        default="slidev-agent", description="LangSmith project name", alias="langsmith_project"
+        default="slidev-agent",
+        description="LangSmith project name",
+        alias="langsmith_project",
     )
     langchain_endpoint: str = Field(
-        default="https://api.smith.langchain.com", description="LangSmith endpoint", alias="langsmith_endpoint"
+        default="https://api.smith.langchain.com",
+        description="LangSmith endpoint",
+        alias="langsmith_endpoint",
     )
 
     # Component Configurations

@@ -82,5 +82,3 @@ Datensicherheit und ethische Fragestellungen.
 "Die Grenzen des Deep Learning sind die Grenzen unserer Vorstellungskraft."
 
 — Inspirierende Gedanken:
-
-

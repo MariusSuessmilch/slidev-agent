@@ -14,19 +14,19 @@ sans: Montserrat
 
 # Einführung in Neuronale Netze
 
-- **Definition von Neuronalen Netzen**  
+- **Definition von Neuronalen Netzen**
   Modelle, die das menschliche Gehirn nachahmen.
-  
-- **Bedeutung in der Informatik**  
+
+- **Bedeutung in der Informatik**
   Grundpfeiler für maschinelles Lernen und KI.
-  
-- **Anwendungsbereiche**  
+
+- **Anwendungsbereiche**
   Bild- und Spracherkennung, autonomes Fahren, Medizin.
-  
-- **Technische Grundlage**  
+
+- **Technische Grundlage**
   Besteht aus Schichten von Neuronen, die Daten verarbeiten.
-  
-- **Aktuelle Entwicklungen**  
+
+- **Aktuelle Entwicklungen**
   Tiefe Neuronale Netze und deren Leistungsfähigkeit.
 
 <div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
@@ -126,5 +126,3 @@ class: text-center
 ```
 
 — Wie könnte Ihr Beitrag zur Forschung aussehen?
-
-

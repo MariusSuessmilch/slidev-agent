@@ -140,5 +140,3 @@ class: text-center
 - **Einladung zu Fragen**
   - Offene Fragerunde
   - Diskussionsforum für tiefergehende Themen
-
-

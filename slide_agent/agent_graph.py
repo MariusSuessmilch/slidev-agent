@@ -7,138 +7,182 @@ from langgraph.graph import END, START, StateGraph
 
 from slide_agent.config import setup_tracing
 from slide_agent.llm import get_llm
-from slide_agent.models import AgentState, SlideDeck, SlideSpec, SlideType, TopicRequest
+from slide_agent.models import (
+    AgentState,
+    SlideDeck,
+    SlideSpec,
+    SlideType,
+    TopicRequest,
+    create_slide_outline,
+)
 from slide_agent.writers import FilesystemWriter
 
 
 def planner_node(state: AgentState) -> dict[str, Any]:
-    """Plan the slide structure based on the topic request."""
+    """Plan the slide structure based on the topic request using function calling."""
     llm = get_llm()
 
-    prompt = f"""
-    You are an expert presentation planner. Create a detailed outline for a {state.request.slide_count}-slide presentation about: {state.request.topic}
+    # Bind the tool to the LLM with structured output
+    llm_with_tools = llm.bind_tools(
+        [create_slide_outline], tool_choice="create_slide_outline"
+    )
 
-    Audience: {state.request.audience}
-    LANGUAGE: {state.request.language} - ALL TITLES AND CONTENT MUST BE IN THIS LANGUAGE!
-    Additional context: {state.request.additional_context or 'None'}
+    system_prompt = f"""
+    You are an expert presentation planner. Create a detailed outline for a slide presentation.
 
-    Return ONLY a valid JSON array with this exact structure:
-    [
-        {{
-            "title": "Compelling slide title",
-            "slide_type": "title|bullets|code|comparison|quote",
-            "content_summary": "Brief description of slide content",
-            "key_points": ["specific point 1", "specific point 2", "specific point 3"],
-            "notes": "Speaker notes or additional context"
-        }}
-    ]
+    IMPORTANT GUIDELINES:
+    - LANGUAGE: {state.request.language} - ALL TITLES AND CONTENT MUST BE IN THIS LANGUAGE!
+    - Start with a title slide
+    - Include practical examples relevant to the audience
+    - Use code slides for technical topics when appropriate
+    - End with summary/conclusion
+    - Maximum 5 key points per slide
+    - Each slide should be focused and concise
 
     Slide type guidelines:
     - "title": Opening slide with topic introduction
-    - "bullets": Key concepts, benefits, explanations with bullet points  
+    - "bullets": Key concepts, benefits, explanations with bullet points
     - "code": Programming examples, syntax demonstrations
     - "comparison": Before/after, pros/cons, alternatives
     - "quote": Summary, conclusion, or inspirational content
-
-    For "{state.request.topic}" and "{state.request.audience}" audience, create exactly {state.request.slide_count} slides:
-    1. Start with a title slide
-    2. Include practical examples relevant to the audience
-    3. Use code slides for technical topics
-    4. End with summary/conclusion
-
-    Respond with ONLY the JSON array, no additional text.
     """
 
-    response = llm.invoke(
-        [
-            SystemMessage(content=prompt),
-            HumanMessage(content=f"Create outline for: {state.request.topic}"),
-        ]
-    )
+    user_prompt = f"""Create a {state.request.slide_count}-slide presentation outline about: {state.request.topic}
 
-    # Parse JSON response from LLM
+    Audience: {state.request.audience}
+    Additional context: {state.request.additional_context or 'None'}
+
+    Use the create_slide_outline tool to structure your response."""
+
     try:
-        import json
-        # Extract JSON from response
-        response_text = response.content.strip()
-        if response_text.startswith("```json"):
-            response_text = response_text[7:-3].strip()
-        elif response_text.startswith("```"):
-            response_text = response_text[3:-3].strip()
+        response = llm_with_tools.invoke(
+            [SystemMessage(content=system_prompt), HumanMessage(content=user_prompt)]
+        )
 
-        outline = json.loads(response_text)
+        # Extract the tool call result
+        if response.tool_calls:
+            tool_call = response.tool_calls[0]
+            # Execute the tool to get the validated outline
+            tool_result = create_slide_outline.invoke(tool_call["args"])
 
-        # Convert to expected format
-        for slide in outline:
-            if "content_points" not in slide and "key_points" in slide:
-                slide["content_points"] = slide["key_points"]
-    except (json.JSONDecodeError, KeyError):
-        # Fallback to topic-specific outline
-        if "python" in state.request.topic.lower() and "funktion" in state.request.topic.lower():
-            outline = [
-                {
-                    "title": "Python Funktionen für Schüler",
-                    "slide_type": "title",
-                    "content_points": ["Einführung in Python Funktionen", "Warum Funktionen wichtig sind"],
-                },
-                {
-                    "title": "Was ist eine Funktion?",
-                    "slide_type": "bullets",
-                    "content_points": ["Definition einer Funktion", "Warum verwenden wir Funktionen?", "Beispiele aus dem Alltag"],
-                },
-                {
-                    "title": "Erste Funktion erstellen",
-                    "slide_type": "code",
-                    "content_points": ["def-Schlüsselwort", "Funktionsname und Parameter", "Funktionskörper"],
-                },
-                {
-                    "title": "Parameter und Argumente",
-                    "slide_type": "code",
-                    "content_points": ["Was sind Parameter?", "Argumente übergeben", "Beispiele mit verschiedenen Parametern"],
-                },
-                {
-                    "title": "Return-Werte",
-                    "slide_type": "code",
-                    "content_points": ["return-Statement", "Rückgabewerte verwenden", "Funktionen mit und ohne return"],
-                },
-                {
-                    "title": "Praktische Übungen",
-                    "slide_type": "bullets",
-                    "content_points": ["Einfache Mathematik-Funktionen", "Text-Verarbeitung", "Interaktive Programme"],
-                },
-                {
-                    "title": "Zusammenfassung",
-                    "slide_type": "quote",
-                    "content_points": ["Was haben wir gelernt?", "Nächste Schritte", "Übungsaufgaben"],
-                },
-            ]
+            # Convert to the expected format for the rest of the pipeline
+            outline = []
+            for slide in tool_result.get("slides", []):
+                slide_dict = {
+                    "title": slide.get("title", ""),
+                    "slide_type": slide.get("slide_type", "bullets"),
+                    "content_summary": slide.get("content_summary", ""),
+                    "content_points": slide.get("key_points", []),
+                    "notes": slide.get("notes", ""),
+                }
+                outline.append(slide_dict)
         else:
-            # Generic fallback
-            outline = [
-                {
-                    "title": f"Introduction to {state.request.topic}",
-                    "slide_type": "title",
-                    "content_points": ["Overview of the topic"],
-                },
-                {
-                    "title": "Key Concepts",
-                    "slide_type": "bullets",
-                    "content_points": ["Concept 1", "Concept 2", "Concept 3"],
-                },
-                {
-                    "title": "Summary",
-                    "slide_type": "bullets",
-                    "content_points": ["Recap", "Next steps"],
-                },
-            ]
+            # Fallback if no tool call was made
+            outline = _get_fallback_outline(state.request)
+
+    except Exception as e:
+        print(f"Function calling failed: {e}")
+        # Use fallback outline on any error
+        outline = _get_fallback_outline(state.request)
 
     return {
         "outline": outline,
         "metadata": {
-            "planner_response": response.content,
+            "planner_response": getattr(
+                response, "content", "Generated using function calling"
+            ),
             "planned_slides": len(outline),
+            "used_function_calling": True,
         },
     }
+
+
+def _get_fallback_outline(request: TopicRequest) -> list[dict[str, Any]]:
+    """Generate a fallback outline when function calling fails."""
+    if "python" in request.topic.lower() and "funktion" in request.topic.lower():
+        return [
+            {
+                "title": "Python Funktionen für Schüler",
+                "slide_type": "title",
+                "content_points": [
+                    "Einführung in Python Funktionen",
+                    "Warum Funktionen wichtig sind",
+                ],
+            },
+            {
+                "title": "Was ist eine Funktion?",
+                "slide_type": "bullets",
+                "content_points": [
+                    "Definition einer Funktion",
+                    "Warum verwenden wir Funktionen?",
+                    "Beispiele aus dem Alltag",
+                ],
+            },
+            {
+                "title": "Erste Funktion erstellen",
+                "slide_type": "code",
+                "content_points": [
+                    "def-Schlüsselwort",
+                    "Funktionsname und Parameter",
+                    "Funktionskörper",
+                ],
+            },
+            {
+                "title": "Parameter und Argumente",
+                "slide_type": "code",
+                "content_points": [
+                    "Was sind Parameter?",
+                    "Argumente übergeben",
+                    "Beispiele mit verschiedenen Parametern",
+                ],
+            },
+            {
+                "title": "Return-Werte",
+                "slide_type": "code",
+                "content_points": [
+                    "return-Statement",
+                    "Rückgabewerte verwenden",
+                    "Funktionen mit und ohne return",
+                ],
+            },
+            {
+                "title": "Praktische Übungen",
+                "slide_type": "bullets",
+                "content_points": [
+                    "Einfache Mathematik-Funktionen",
+                    "Text-Verarbeitung",
+                    "Interaktive Programme",
+                ],
+            },
+            {
+                "title": "Zusammenfassung",
+                "slide_type": "quote",
+                "content_points": [
+                    "Was haben wir gelernt?",
+                    "Nächste Schritte",
+                    "Übungsaufgaben",
+                ],
+            },
+        ]
+    else:
+        # Generic fallback
+        return [
+            {
+                "title": f"Einführung in {request.topic}",
+                "slide_type": "title",
+                "content_points": ["Überblick über das Thema"],
+            },
+            {
+                "title": "Wichtige Konzepte",
+                "slide_type": "bullets",
+                "content_points": ["Konzept 1", "Konzept 2", "Konzept 3"],
+            },
+            {
+                "title": "Zusammenfassung",
+                "slide_type": "bullets",
+                "content_points": ["Zusammenfassung", "Nächste Schritte"],
+            },
+        ]
 
 
 def slide_writer_node(state: AgentState) -> dict[str, Any]:
@@ -169,15 +213,15 @@ def slide_writer_node(state: AgentState) -> dict[str, Any]:
         - Keep explanations concise and focused
         - Avoid lengthy paragraphs
         - Use clear, simple language
-        
-        For code slides: 
+
+        For code slides:
         - Include only essential code snippets (max 10 lines)
         - CRITICAL: Format code blocks correctly. NEVER concatenate language with code!
         - Use ONLY these exact language names: python, javascript, java, cpp, c, sql, bash, html, css, json, yaml, xml
         - ALWAYS use this exact format: ```python<newline>def function():<newline>    pass<newline>```
         - NEVER write: ```pythondef or ```python# or ```pythonimport
         - ALWAYS write: ```python<newline>def or ```python<newline># or ```python<newline>import
-        For title slides: 
+        For title slides:
         - Use simple, single-level bullet points only
         - NO nested or indented sub-bullets
         - Maximum 5 simple bullet points
@@ -185,13 +229,13 @@ def slide_writer_node(state: AgentState) -> dict[str, Any]:
         - Focus on overview, importance, and what audience will learn
         For bullet slides: Focus on key concepts only
         For comparison slides: Keep comparisons brief and clear
-        For quote slides: 
+        For quote slides:
         - Create an inspiring summary or conclusion
         - Use format: Clear statements without quotation marks
         - End with a memorable phrase or call-to-action
         - NO code blocks, NO complex formatting
         - Focus on key takeaways and future outlook
-        
+
         Generate appropriate content for this slide type.
         Keep it concise, engaging, and within the limits above.
         """
@@ -321,7 +365,7 @@ def run_agent(topic_request: TopicRequest, output_dir: str = None) -> AgentState
         metadata={
             "session_id": "simple-run",
             "output_dir": output_dir,
-        }
+        },
     )
 
     result = graph.invoke(initial_state)
