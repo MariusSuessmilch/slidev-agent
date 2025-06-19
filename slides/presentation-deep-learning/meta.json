@@ -1,0 +1,48 @@
+{
+  "title": "Presentation: Deep Learning",
+  "subtitle": "For students audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 4,
+  "generated_at": "2025-06-19T10:56:11.744710",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-deep-learning",
+  "slides": [
+    {
+      "title": "Einführung in Deep Learning",
+      "type": "title",
+      "notes": "Generated for topic: Deep Learning",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Kernkonzepte des Deep Learning",
+      "type": "bullets",
+      "notes": "Generated for topic: Deep Learning",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Ein einfaches Beispiel: Bildklassifikation",
+      "type": "code",
+      "notes": "Generated for topic: Deep Learning",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Zusammenfassung und Ausblick",
+      "type": "quote",
+      "notes": "Generated for topic: Deep Learning",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Deep Learning",
+    "slide_count": 4,
+    "language": "de"
+  }
+}

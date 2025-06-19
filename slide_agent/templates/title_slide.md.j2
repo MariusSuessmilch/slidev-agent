@@ -1,0 +1,9 @@
+# {{ title }}
+
+{{ subtitle if subtitle else content }}
+
+{% if click_to_next -%}
+<div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
+  Drücke Space für die nächste Folie <carbon:arrow-right />
+</div>
+{%- endif %}

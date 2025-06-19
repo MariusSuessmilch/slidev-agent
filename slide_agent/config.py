@@ -1,7 +1,6 @@
 """Configuration management for Slidev Agent."""
 
 import os
-from typing import Optional
 
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
@@ -14,7 +13,7 @@ class LLMConfig(BaseModel):
     temperature: float = Field(
         default=0.7, ge=0.0, le=2.0, description="Temperature for generation"
     )
-    max_tokens: Optional[int] = Field(
+    max_tokens: int | None = Field(
         default=None, description="Maximum tokens to generate"
     )
     timeout: int = Field(default=60, description="Request timeout in seconds")
@@ -25,7 +24,7 @@ class TracingConfig(BaseModel):
 
     enabled: bool = Field(default=True, description="Whether to enable tracing")
     project_name: str = Field(default="slidev", description="LangSmith project name")
-    session_id: Optional[str] = Field(
+    session_id: str | None = Field(
         default=None, description="Session ID for grouping traces"
     )
 
@@ -49,19 +48,19 @@ class Settings(BaseSettings):
 
     # API Keys
     openai_api_key: str = Field(default="", description="OpenAI API key")
-    langchain_api_key: Optional[str] = Field(
+    langchain_api_key: str | None = Field(
         default=None, description="LangSmith API key", alias="langsmith_api_key"
     )
 
     # LangSmith Configuration
     langchain_tracing_v2: bool = Field(
-        default=True, description="Enable LangSmith tracing"
+        default=True, description="Enable LangSmith tracing", alias="langsmith_tracing"
     )
     langchain_project: str = Field(
-        default="slidev-agent", description="LangSmith project name"
+        default="slidev-agent", description="LangSmith project name", alias="langsmith_project"
     )
     langchain_endpoint: str = Field(
-        default="https://api.smith.langchain.com", description="LangSmith endpoint"
+        default="https://api.smith.langchain.com", description="LangSmith endpoint", alias="langsmith_endpoint"
     )
 
     # Component Configurations
@@ -86,9 +85,12 @@ def setup_tracing() -> None:
     """Setup LangSmith tracing environment variables."""
     settings = get_settings()
 
+    # Only enable tracing if API key is available
     if settings.langchain_api_key:
         os.environ["LANGCHAIN_API_KEY"] = settings.langchain_api_key
-
-    os.environ["LANGCHAIN_TRACING_V2"] = str(settings.langchain_tracing_v2).lower()
-    os.environ["LANGCHAIN_PROJECT"] = settings.langchain_project
-    os.environ["LANGCHAIN_ENDPOINT"] = settings.langchain_endpoint
+        os.environ["LANGCHAIN_TRACING_V2"] = str(settings.langchain_tracing_v2).lower()
+        os.environ["LANGCHAIN_PROJECT"] = settings.langchain_project
+        os.environ["LANGCHAIN_ENDPOINT"] = settings.langchain_endpoint
+    else:
+        # Disable tracing when no API key is available
+        os.environ["LANGCHAIN_TRACING_V2"] = "false"

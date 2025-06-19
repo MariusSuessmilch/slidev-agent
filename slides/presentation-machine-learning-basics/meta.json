@@ -1,0 +1,55 @@
+{
+  "title": "Presentation: Machine Learning Basics",
+  "subtitle": "For data science students audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 5,
+  "generated_at": "2025-06-19T10:44:56.578737",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-machine-learning-basics",
+  "slides": [
+    {
+      "title": "Einführung in Maschinelles Lernen",
+      "type": "title",
+      "notes": "Generated for topic: Machine Learning Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Schlüsselkonzepte im Maschinellen Lernen",
+      "type": "bullets",
+      "notes": "Generated for topic: Machine Learning Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Ein einfaches Beispiel: Lineare Regression",
+      "type": "code",
+      "notes": "Generated for topic: Machine Learning Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Vor- und Nachteile von Maschinellem Lernen",
+      "type": "comparison",
+      "notes": "Generated for topic: Machine Learning Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Zusammenfassung und Ausblick",
+      "type": "quote",
+      "notes": "Generated for topic: Machine Learning Basics",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Machine Learning Basics",
+    "slide_count": 5,
+    "language": "de"
+  }
+}

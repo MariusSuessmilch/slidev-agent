@@ -1,0 +1,19 @@
+---
+layout: center
+class: text-center
+---
+
+# {{ title }}
+
+{% if quote -%}
+> {{ quote }}
+
+— {{ author if author else "Unknown" }}
+{%- else -%}
+{{ content }}
+{%- endif %}
+
+{% if additional_content -%}
+
+{{ additional_content }}
+{%- endif %}

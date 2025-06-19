@@ -1,0 +1,90 @@
+{
+  "title": "Presentation: Logistic\n      Regression",
+  "subtitle": "For data science students audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 10,
+  "generated_at": "2025-06-19T01:41:23.595856",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-logistic-regression",
+  "slides": [
+    {
+      "title": "Einführung in die Logistische Regression",
+      "type": "title",
+      "notes": "Generated for topic: Logistic\n      Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Grundlagen der Logistischen Regression",
+      "type": "bullets",
+      "notes": "Generated for topic: Logistic\n      Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Vorteile der Logistischen Regression",
+      "type": "bullets",
+      "notes": "Generated for topic: Logistic\n      Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Anwendungsbeispiele der Logistischen Regression",
+      "type": "bullets",
+      "notes": "Generated for topic: Logistic\n      Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Implementierung in Python",
+      "type": "code",
+      "notes": "Generated for topic: Logistic\n      Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Hyperparameter-Tuning",
+      "type": "bullets",
+      "notes": "Generated for topic: Logistic\n      Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Vergleich mit anderen Klassifikationsmethoden",
+      "type": "comparison",
+      "notes": "Generated for topic: Logistic\n      Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Herausforderungen und Lösungsansätze",
+      "type": "bullets",
+      "notes": "Generated for topic: Logistic\n      Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Zukünftige Entwicklungen",
+      "type": "bullets",
+      "notes": "Generated for topic: Logistic\n      Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Zusammenfassung und Fazit",
+      "type": "quote",
+      "notes": "Generated for topic: Logistic\n      Regression",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Logistic\n      Regression",
+    "slide_count": 10,
+    "language": "de"
+  }
+}

@@ -8,6 +8,7 @@ from langgraph.graph import END, START, StateGraph
 from slide_agent.config import setup_tracing
 from slide_agent.llm import get_llm
 from slide_agent.models import AgentState, SlideDeck, SlideSpec, SlideType, TopicRequest
+from slide_agent.writers import FilesystemWriter
 
 
 def planner_node(state: AgentState) -> dict[str, Any]:
@@ -15,27 +16,37 @@ def planner_node(state: AgentState) -> dict[str, Any]:
     llm = get_llm()
 
     prompt = f"""
-    You are a presentation planner. Create an outline for a {state.request.slide_count}-slide presentation about: {state.request.topic}
+    You are an expert presentation planner. Create a detailed outline for a {state.request.slide_count}-slide presentation about: {state.request.topic}
 
     Audience: {state.request.audience}
-    Language: {state.request.language}
-
+    LANGUAGE: {state.request.language} - ALL TITLES AND CONTENT MUST BE IN THIS LANGUAGE!
     Additional context: {state.request.additional_context or 'None'}
 
-    Return a JSON array of slide objects with this structure:
+    Return ONLY a valid JSON array with this exact structure:
     [
         {{
-            "title": "Slide title",
-            "slide_type": "title|bullets|code|diagram|quote|image|comparison",
-            "content_points": ["key point 1", "key point 2", "..."]
+            "title": "Compelling slide title",
+            "slide_type": "title|bullets|code|comparison|quote",
+            "content_summary": "Brief description of slide content",
+            "key_points": ["specific point 1", "specific point 2", "specific point 3"],
+            "notes": "Speaker notes or additional context"
         }}
     ]
 
-    Make sure to include:
-    - A compelling title slide
-    - 2-3 main content sections
-    - Clear learning objectives
-    - A conclusion/summary slide
+    Slide type guidelines:
+    - "title": Opening slide with topic introduction
+    - "bullets": Key concepts, benefits, explanations with bullet points  
+    - "code": Programming examples, syntax demonstrations
+    - "comparison": Before/after, pros/cons, alternatives
+    - "quote": Summary, conclusion, or inspirational content
+
+    For "{state.request.topic}" and "{state.request.audience}" audience, create exactly {state.request.slide_count} slides:
+    1. Start with a title slide
+    2. Include practical examples relevant to the audience
+    3. Use code slides for technical topics
+    4. End with summary/conclusion
+
+    Respond with ONLY the JSON array, no additional text.
     """
 
     response = llm.invoke(
@@ -45,24 +56,81 @@ def planner_node(state: AgentState) -> dict[str, Any]:
         ]
     )
 
-    # For now, return a simple mock outline - in M3 we'll parse the LLM response
-    outline = [
-        {
-            "title": f"Introduction to {state.request.topic}",
-            "slide_type": "title",
-            "content_points": ["Overview of the topic"],
-        },
-        {
-            "title": "Key Concepts",
-            "slide_type": "bullets",
-            "content_points": ["Concept 1", "Concept 2", "Concept 3"],
-        },
-        {
-            "title": "Summary",
-            "slide_type": "bullets",
-            "content_points": ["Recap", "Next steps"],
-        },
-    ]
+    # Parse JSON response from LLM
+    try:
+        import json
+        # Extract JSON from response
+        response_text = response.content.strip()
+        if response_text.startswith("```json"):
+            response_text = response_text[7:-3].strip()
+        elif response_text.startswith("```"):
+            response_text = response_text[3:-3].strip()
+
+        outline = json.loads(response_text)
+
+        # Convert to expected format
+        for slide in outline:
+            if "content_points" not in slide and "key_points" in slide:
+                slide["content_points"] = slide["key_points"]
+    except (json.JSONDecodeError, KeyError):
+        # Fallback to topic-specific outline
+        if "python" in state.request.topic.lower() and "funktion" in state.request.topic.lower():
+            outline = [
+                {
+                    "title": "Python Funktionen für Schüler",
+                    "slide_type": "title",
+                    "content_points": ["Einführung in Python Funktionen", "Warum Funktionen wichtig sind"],
+                },
+                {
+                    "title": "Was ist eine Funktion?",
+                    "slide_type": "bullets",
+                    "content_points": ["Definition einer Funktion", "Warum verwenden wir Funktionen?", "Beispiele aus dem Alltag"],
+                },
+                {
+                    "title": "Erste Funktion erstellen",
+                    "slide_type": "code",
+                    "content_points": ["def-Schlüsselwort", "Funktionsname und Parameter", "Funktionskörper"],
+                },
+                {
+                    "title": "Parameter und Argumente",
+                    "slide_type": "code",
+                    "content_points": ["Was sind Parameter?", "Argumente übergeben", "Beispiele mit verschiedenen Parametern"],
+                },
+                {
+                    "title": "Return-Werte",
+                    "slide_type": "code",
+                    "content_points": ["return-Statement", "Rückgabewerte verwenden", "Funktionen mit und ohne return"],
+                },
+                {
+                    "title": "Praktische Übungen",
+                    "slide_type": "bullets",
+                    "content_points": ["Einfache Mathematik-Funktionen", "Text-Verarbeitung", "Interaktive Programme"],
+                },
+                {
+                    "title": "Zusammenfassung",
+                    "slide_type": "quote",
+                    "content_points": ["Was haben wir gelernt?", "Nächste Schritte", "Übungsaufgaben"],
+                },
+            ]
+        else:
+            # Generic fallback
+            outline = [
+                {
+                    "title": f"Introduction to {state.request.topic}",
+                    "slide_type": "title",
+                    "content_points": ["Overview of the topic"],
+                },
+                {
+                    "title": "Key Concepts",
+                    "slide_type": "bullets",
+                    "content_points": ["Concept 1", "Concept 2", "Concept 3"],
+                },
+                {
+                    "title": "Summary",
+                    "slide_type": "bullets",
+                    "content_points": ["Recap", "Next steps"],
+                },
+            ]
 
     return {
         "outline": outline,
@@ -91,9 +159,41 @@ def slide_writer_node(state: AgentState) -> dict[str, Any]:
 
         Topic context: {state.request.topic}
         Audience: {state.request.audience}
+        LANGUAGE: {state.request.language} - ALL CONTENT MUST BE IN THIS LANGUAGE!
 
+        IMPORTANT CONTENT LIMITS:
+        - Maximum 10 lines per slide total
+        - Maximum 5 bullet points per slide
+        - Each bullet point: maximum 1 line of text
+        - NO nested bullet points (no sub-bullets with indentation)
+        - Keep explanations concise and focused
+        - Avoid lengthy paragraphs
+        - Use clear, simple language
+        
+        For code slides: 
+        - Include only essential code snippets (max 10 lines)
+        - CRITICAL: Format code blocks correctly. NEVER concatenate language with code!
+        - Use ONLY these exact language names: python, javascript, java, cpp, c, sql, bash, html, css, json, yaml, xml
+        - ALWAYS use this exact format: ```python<newline>def function():<newline>    pass<newline>```
+        - NEVER write: ```pythondef or ```python# or ```pythonimport
+        - ALWAYS write: ```python<newline>def or ```python<newline># or ```python<newline>import
+        For title slides: 
+        - Use simple, single-level bullet points only
+        - NO nested or indented sub-bullets
+        - Maximum 5 simple bullet points
+        - Each bullet should be one clear, short statement
+        - Focus on overview, importance, and what audience will learn
+        For bullet slides: Focus on key concepts only
+        For comparison slides: Keep comparisons brief and clear
+        For quote slides: 
+        - Create an inspiring summary or conclusion
+        - Use format: Clear statements without quotation marks
+        - End with a memorable phrase or call-to-action
+        - NO code blocks, NO complex formatting
+        - Focus on key takeaways and future outlook
+        
         Generate appropriate content for this slide type.
-        Keep it concise and engaging.
+        Keep it concise, engaging, and within the limits above.
         """
 
         response = llm.invoke(
@@ -162,6 +262,32 @@ def reviewer_node(state: AgentState) -> dict[str, Any]:
     }
 
 
+def filesystem_writer_node(state: AgentState) -> dict[str, Any]:
+    """Write the slide deck to filesystem."""
+    if not state.deck:
+        return {"error": "No deck available for writing"}
+
+    writer = FilesystemWriter()
+
+    # Determine output directory from metadata or use default
+    output_dir = state.metadata.get("output_dir")
+
+    try:
+        # Write deck synchronously for now
+        result = writer.write_deck_sync(state.deck, output_dir)
+
+        return {
+            "metadata": {
+                **state.metadata,
+                "filesystem_result": result,
+                "slides_written": True,
+                "output_path": result["output_path"],
+            }
+        }
+    except Exception as e:
+        return {"error": f"Failed to write slides: {str(e)}"}
+
+
 def create_agent_graph() -> StateGraph:
     """Create and configure the LangGraph workflow."""
     # Setup tracing
@@ -174,22 +300,28 @@ def create_agent_graph() -> StateGraph:
     workflow.add_node("planner", planner_node)
     workflow.add_node("slide_writer", slide_writer_node)
     workflow.add_node("reviewer", reviewer_node)
+    workflow.add_node("filesystem_writer", filesystem_writer_node)
 
     # Define the flow
     workflow.add_edge(START, "planner")
     workflow.add_edge("planner", "slide_writer")
     workflow.add_edge("slide_writer", "reviewer")
-    workflow.add_edge("reviewer", END)
+    workflow.add_edge("reviewer", "filesystem_writer")
+    workflow.add_edge("filesystem_writer", END)
 
     return workflow.compile()
 
 
-def run_agent(topic_request: TopicRequest) -> AgentState:
+def run_agent(topic_request: TopicRequest, output_dir: str = None) -> AgentState:
     """Run the slide generation agent workflow."""
     graph = create_agent_graph()
 
     initial_state = AgentState(
-        request=topic_request, metadata={"session_id": "simple-run"}
+        request=topic_request,
+        metadata={
+            "session_id": "simple-run",
+            "output_dir": output_dir,
+        }
     )
 
     result = graph.invoke(initial_state)

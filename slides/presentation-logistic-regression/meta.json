@@ -1,0 +1,69 @@
+{
+  "title": "Presentation: Logistic Regression",
+  "subtitle": "For data science students audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 7,
+  "generated_at": "2025-06-19T01:39:28.917831",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-logistic-regression",
+  "slides": [
+    {
+      "title": "Einführung in die Logistische Regression",
+      "type": "title",
+      "notes": "Generated for topic: Logistic Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Grundlagen der Logistischen Regression",
+      "type": "bullets",
+      "notes": "Generated for topic: Logistic Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Anwendungsbeispiele in der Praxis",
+      "type": "bullets",
+      "notes": "Generated for topic: Logistic Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Implementierung in Python",
+      "type": "code",
+      "notes": "Generated for topic: Logistic Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Vor- und Nachteile der Logistischen Regression",
+      "type": "comparison",
+      "notes": "Generated for topic: Logistic Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Erweiterungen und Alternativen",
+      "type": "bullets",
+      "notes": "Generated for topic: Logistic Regression",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Zusammenfassung und Ausblick",
+      "type": "quote",
+      "notes": "Generated for topic: Logistic Regression",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Logistic Regression",
+    "slide_count": 7,
+    "language": "de"
+  }
+}

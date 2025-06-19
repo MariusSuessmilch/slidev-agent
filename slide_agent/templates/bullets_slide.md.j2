@@ -1,0 +1,26 @@
+# {{ title }}
+
+{% if content -%}
+{{ content }}
+
+{% endif -%}
+{% if bullet_points -%}
+{% for point in bullet_points -%}
+- {{ point }}
+{% endfor -%}
+{% endif -%}
+
+{% if two_column and left_content and right_content -%}
+<div grid="~ cols-2 gap-4">
+<div>
+
+{{ left_content }}
+
+</div>
+<div>
+
+{{ right_content }}
+
+</div>
+</div>
+{%- endif %}

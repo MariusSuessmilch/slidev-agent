@@ -1,0 +1,21 @@
+---
+theme: {{ theme }}
+title: "{{ title }}"
+{% if info -%}
+info: |
+  {{ info }}
+{% endif -%}
+{% if css_class -%}
+class: {{ css_class }}
+{% endif -%}
+drawings:
+  persist: false
+transition: {{ transition }}
+mdc: true
+{% if fonts -%}
+fonts:
+{% for font_type, font_name in fonts.items() -%}
+  {{ font_type }}: {{ font_name }}
+{% endfor -%}
+{% endif -%}
+---

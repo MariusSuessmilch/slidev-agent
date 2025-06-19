@@ -1,6 +1,5 @@
 """CLI Interface for Slidev Agent."""
 
-from typing import Optional
 
 import typer
 from rich.console import Console
@@ -20,10 +19,10 @@ app = typer.Typer()
 def main(
     topic: str = typer.Argument(..., help="Topic for slide generation"),
     audience: str = typer.Option("general", help="Target audience"),
-    language: str = typer.Option("en", help="Language for the presentation"),
+    language: str = typer.Option("de", help="Language for the presentation"),
     slide_count: int = typer.Option(10, help="Number of slides to generate"),
     theme: str = typer.Option("the-unnamed", help="Slidev theme to use"),
-    additional_context: Optional[str] = typer.Option(None, help="Additional context"),
+    additional_context: str | None = typer.Option(None, help="Additional context"),
     output_dir: str = typer.Option("slides", help="Output directory"),
 ) -> None:
     """Generate slides for a given topic using AI agents."""
@@ -46,7 +45,7 @@ def main(
         # Run the agent workflow
         console.print("🤖 Running agent workflow...")
         with console.status("[bold green]Processing..."):
-            result = run_agent(request)
+            result = run_agent(request, output_dir)
 
         # Display results
         if result.error:
@@ -69,10 +68,24 @@ def main(
                 console.print(
                     f"\n🔍 Session: {result.metadata.get('session_id', 'unknown')}"
                 )
+
+                # Show filesystem results
+                if result.metadata.get("slides_written"):
+                    output_path = result.metadata.get("output_path")
+                    console.print(f"📁 Files written to: [bold green]{output_path}[/bold green]")
+
+                    fs_result = result.metadata.get("filesystem_result", {})
+                    console.print(f"📄 Main file: {fs_result.get('slides_file', 'index.md')}")
+                    console.print(f"📊 Metadata: {fs_result.get('meta_file', 'meta.json')}")
+                    console.print(f"📦 Package: {fs_result.get('package_file', 'package.json')}")
+
+                    size_kb = fs_result.get("size_bytes", 0) / 1024
+                    console.print(f"💾 Size: {size_kb:.1f} KB")
         else:
             console.print("⚠️  No deck generated")
 
-        console.print(f"\n💾 Output directory: {output_dir} (implementation in M3)")
+        if not result.metadata.get("slides_written"):
+            console.print(f"\n💾 Output directory: {output_dir} (no files written due to error)")
 
     except Exception as e:
         console.print(f"❌ Failed to generate slides: {e}")

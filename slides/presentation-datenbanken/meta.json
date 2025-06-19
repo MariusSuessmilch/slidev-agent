@@ -1,0 +1,48 @@
+{
+  "title": "Presentation: Datenbanken",
+  "subtitle": "For Studenten audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 4,
+  "generated_at": "2025-06-19T11:13:15.246788",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-datenbanken",
+  "slides": [
+    {
+      "title": "Einführung in Datenbanken",
+      "type": "title",
+      "notes": "Generated for topic: Datenbanken",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Vorteile und Anwendungen von Datenbanken",
+      "type": "bullets",
+      "notes": "Generated for topic: Datenbanken",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "SQL: Eine wesentliche Datenbanksprache",
+      "type": "code",
+      "notes": "Generated for topic: Datenbanken",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Zusammenfassung und zukünftige Entwicklungen",
+      "type": "quote",
+      "notes": "Generated for topic: Datenbanken",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Datenbanken",
+    "slide_count": 4,
+    "language": "de"
+  }
+}

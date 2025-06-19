@@ -1,0 +1,48 @@
+{
+  "title": "Presentation: Künstliche Intelligenz",
+  "subtitle": "For Einsteiger audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 4,
+  "generated_at": "2025-06-19T11:00:38.210159",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-künstliche-intelligenz",
+  "slides": [
+    {
+      "title": "Einführung in Künstliche Intelligenz",
+      "type": "title",
+      "notes": "Generated for topic: Künstliche Intelligenz",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Praktische Anwendungen von KI",
+      "type": "bullets",
+      "notes": "Generated for topic: Künstliche Intelligenz",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Einfache KI-Programmierung",
+      "type": "code",
+      "notes": "Generated for topic: Künstliche Intelligenz",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Zusammenfassung und Ausblick",
+      "type": "quote",
+      "notes": "Generated for topic: Künstliche Intelligenz",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Künstliche Intelligenz",
+    "slide_count": 4,
+    "language": "de"
+  }
+}

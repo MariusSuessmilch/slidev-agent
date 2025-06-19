@@ -1,0 +1,62 @@
+{
+  "title": "Presentation: Neural Networks",
+  "subtitle": "For computer science students audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 6,
+  "generated_at": "2025-06-19T10:46:02.372738",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-neural-networks",
+  "slides": [
+    {
+      "title": "Einführung in Neuronale Netze",
+      "type": "title",
+      "notes": "Generated for topic: Neural Networks",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Grundlagen der Neuronalen Netze",
+      "type": "bullets",
+      "notes": "Generated for topic: Neural Networks",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Training von Neuronalen Netzen",
+      "type": "bullets",
+      "notes": "Generated for topic: Neural Networks",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Beispiel: Bildklassifikation mit Keras",
+      "type": "code",
+      "notes": "Generated for topic: Neural Networks",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Vor- und Nachteile von Neuronalen Netzen",
+      "type": "comparison",
+      "notes": "Generated for topic: Neural Networks",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Zusammenfassung und Ausblick",
+      "type": "quote",
+      "notes": "Generated for topic: Neural Networks",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Neural Networks",
+    "slide_count": 6,
+    "language": "de"
+  }
+}
