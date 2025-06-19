@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-          
+
       - name: Install uv
         uses: astral-sh/setup-uv@v3
 
@@ -39,7 +39,7 @@ jobs:
         run: |
           # Generate demo presentations for showcase
           uv run python -m slide_agent.cli "Python Functions" --audience "students" --slide-count 6 --language "en"
-          uv run python -m slide_agent.cli "Machine Learning Grundlagen" --audience "Studenten" --slide-count 7 --language "de"  
+          uv run python -m slide_agent.cli "Machine Learning Grundlagen" --audience "Studenten" --slide-count 7 --language "de"
           uv run python -m slide_agent.cli "Web Development Basics" --audience "beginners" --slide-count 5 --language "en"
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -213,7 +213,7 @@ jobs:
 
               <div class="footer">
                   <p>
-                      Generated automatically by 
+                      Generated automatically by
                       <a href="https://github.com/MariusSuessmilch/slidev-agent" class="github-link">Slidev Agent</a>
                       using LangGraph, OpenAI GPT-4o, and Slidev
                   </p>
@@ -260,31 +260,31 @@ jobs:
         run: |
           URL="${{ needs.deploy.outputs.page_url || 'https://mariussuessmilch.github.io/slidev-agent/' }}"
           echo "Testing main page: $URL"
-          
+
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
           echo "HTTP Status: $RESPONSE"
-          
+
           if [ "$RESPONSE" != "200" ]; then
             echo "❌ Smoke test failed: Expected 200, got $RESPONSE"
             exit 1
           fi
-          
+
           echo "✅ Main page accessible"
 
-      - name: Smoke Test - Demo Presentations  
+      - name: Smoke Test - Demo Presentations
         run: |
           BASE_URL="${{ needs.deploy.outputs.page_url || 'https://mariussuessmilch.github.io/slidev-agent/' }}"
-          
+
           for demo in python-functions machine-learning web-development; do
             URL="${BASE_URL}${demo}/"
             RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
             echo "${demo}: $RESPONSE"
-            
+
             if [ "$RESPONSE" != "200" ]; then
               echo "❌ ${demo} demo failed"
               exit 1
             fi
           done
-          
+
           echo "✅ All demos accessible"
           echo "🚀 Deployment successful: $BASE_URL"
