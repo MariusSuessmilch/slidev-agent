@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slidev Agent - Demo Presentations</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .presentations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .presentation-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        .presentation-card:hover {
+            transform: translateY(-5px);
+        }
+        .view-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎛️ Slidev Agent</h1>
+        <p>AI-powered slide generation using LangGraph and OpenAI GPT-4o</p>
+    </div>
+
+    <div class="presentations">
+        <div class="presentation-card">
+            <h3>🐍 Python Functions</h3>
+            <p>Introduction to Python functions for students.</p>
+            <a href="./python-functions/" class="view-btn">View Presentation →</a>
+        </div>
+
+        <div class="presentation-card">
+            <h3>🤖 Machine Learning Grundlagen</h3>
+            <p>Einführung in maschinelles Lernen (Deutsch).</p>
+            <a href="./machine-learning/" class="view-btn">Präsentation anzeigen →</a>
+        </div>
+
+        <div class="presentation-card">
+            <h3>🌐 Web Development Basics</h3>
+            <p>Essential web development concepts for beginners.</p>
+            <a href="./web-development/" class="view-btn">View Presentation →</a>
+        </div>
+    </div>
+</body>
+</html>

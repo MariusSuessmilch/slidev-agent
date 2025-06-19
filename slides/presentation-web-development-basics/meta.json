@@ -1,0 +1,55 @@
+{
+  "title": "Presentation: Web Development Basics",
+  "subtitle": "For beginners audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 5,
+  "generated_at": "2025-06-19T12:45:30.102253",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-web-development-basics",
+  "slides": [
+    {
+      "title": "Introduction to Web Development",
+      "type": "title",
+      "notes": "Generated for topic: Web Development Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Key Components of a Website",
+      "type": "bullets",
+      "notes": "Generated for topic: Web Development Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Understanding HTML: The Backbone of the Web",
+      "type": "code",
+      "notes": "Generated for topic: Web Development Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "CSS and JavaScript: Enhancing User Experience",
+      "type": "comparison",
+      "notes": "Generated for topic: Web Development Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Summary and Next Steps in Web Development",
+      "type": "quote",
+      "notes": "Generated for topic: Web Development Basics",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Web Development Basics",
+    "slide_count": 5,
+    "language": "en"
+  }
+}

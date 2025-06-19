@@ -1,11 +1,14 @@
 {
-  "name": "slidev",
+  "name": "slidev-agent",
   "type": "module",
   "private": true,
   "scripts": {
     "build": "slidev build",
+    "build:gh-pages": "slidev build --base /slidev-agent/",
     "dev": "slidev --open",
-    "export": "slidev export"
+    "export": "slidev export",
+    "build:demo": "./build.sh",
+    "serve": "cd dist && python -m http.server 8000"
   },
   "dependencies": {
     "@slidev/cli": "^51.8.1",

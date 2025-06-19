@@ -1,0 +1,48 @@
+{
+  "title": "Presentation: Data Science Basics",
+  "subtitle": "For beginners audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 4,
+  "generated_at": "2025-06-19T12:18:27.233883",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-data-science-basics",
+  "slides": [
+    {
+      "title": "Introduction to Data Science Basics",
+      "type": "title",
+      "notes": "Generated for topic: Data Science Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Key Concepts in Data Science",
+      "type": "bullets",
+      "notes": "Generated for topic: Data Science Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Basic Data Science Workflow Example",
+      "type": "code",
+      "notes": "Generated for topic: Data Science Basics",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Summary and Next Steps",
+      "type": "quote",
+      "notes": "Generated for topic: Data Science Basics",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Data Science Basics",
+    "slide_count": 4,
+    "language": "en"
+  }
+}

@@ -199,9 +199,12 @@ class SlideGenerator:
 
         # Add type-specific data
         if slide.slide_type == SlideType.TITLE:
+            title_data = self._extract_title_data(slide.content)
             data.update(
                 {
-                    "subtitle": None,  # Will use content as subtitle
+                    "subtitle": title_data.get("subtitle"),
+                    "clean_content": title_data.get("clean_content"),
+                    "content_summary": title_data.get("content_summary"),
                     "click_to_next": is_first,  # Only first slide gets click handler
                 }
             )
@@ -219,6 +222,37 @@ class SlideGenerator:
             data.update(self._extract_quote_data(slide.content))
 
         return data
+
+    def _extract_title_data(self, content: str) -> dict[str, Any]:
+        """Extract clean subtitle content for title slides, removing bullet points."""
+        lines = content.split("\n")
+        clean_lines = []
+        
+        for line in lines:
+            line = line.strip()
+            # Skip bullet points, headers, and empty lines
+            if (
+                line 
+                and not line.startswith("- ")
+                and not line.startswith("* ")
+                and not line.startswith("#")
+                and not line.startswith("  -")
+                and not line.startswith("  *")
+            ):
+                clean_lines.append(line)
+        
+        # Take the first clean line as subtitle, or create a simple one
+        clean_content = "\n".join(clean_lines[:2]).strip() if clean_lines else ""
+        
+        # If no clean content, create a simple subtitle
+        if not clean_content:
+            clean_content = "An overview of key concepts and practical applications"
+        
+        return {
+            "subtitle": clean_content.split("\n")[0] if clean_content else None,
+            "clean_content": clean_content,
+            "content_summary": clean_content,
+        }
 
     def _extract_code_data(self, content: str) -> dict[str, Any]:
         """Extract code, language, and explanation from content."""

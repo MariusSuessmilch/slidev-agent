@@ -3,8 +3,8 @@
   "subtitle": "For students audience",
   "author": null,
   "theme": "the-unnamed",
-  "slide_count": 5,
-  "generated_at": "2025-06-19T12:09:31.206990",
+  "slide_count": 6,
+  "generated_at": "2025-06-19T12:44:24.423308",
   "generated_by": "slidev-agent",
   "output_path": "slides/presentation-python-functions",
   "slides": [
@@ -16,22 +16,29 @@
       "transition": null
     },
     {
-      "title": "Understanding Python Functions",
+      "title": "What is a Function?",
       "type": "bullets",
       "notes": "Generated for topic: Python Functions",
       "layout": null,
       "transition": null
     },
     {
-      "title": "Creating Your First Python Function",
+      "title": "Defining and Calling Functions",
       "type": "code",
       "notes": "Generated for topic: Python Functions",
       "layout": null,
       "transition": null
     },
     {
-      "title": "Benefits of Using Functions in Python",
+      "title": "Benefits of Using Functions",
       "type": "bullets",
+      "notes": "Generated for topic: Python Functions",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Common Mistakes and How to Avoid Them",
+      "type": "comparison",
       "notes": "Generated for topic: Python Functions",
       "layout": null,
       "transition": null
@@ -49,7 +56,7 @@
   "metadata": {
     "generated_by": "slidev-agent",
     "topic": "Python Functions",
-    "slide_count": 5,
+    "slide_count": 6,
     "language": "en"
   }
 }

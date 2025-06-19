@@ -14,11 +14,7 @@ sans: Montserrat
 
 # Introduction to Python Functions
 
-- What are Python Functions?
-- Importance in programming
-- Overview of session
-- Learn key concepts
-- Enhance coding skills
+An overview of key concepts and practical applications
 
 <div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
   Drücke Space für die nächste Folie <carbon:arrow-right />
@@ -26,39 +22,69 @@ sans: Montserrat
 
 ---
 ---
-# Understanding Python Functions
+# What is a Function?
 
-- Definition of a function
+- Definition and purpose
 - Function syntax
-- Components: name, parameters, body, return value
-- Types of functions: Built-in vs User-defined
+- Parameters and arguments
+- Return values
+- Scope and lifetime of variables
 
 
 ---
 ---
-# Creating Your First Python Function
+# Defining and Calling Functions
 
 ```python
-# Define a simple function
-def calculate_square(number):
-    return number * number
-
-# Run the function
-result = calculate_square(4)
-print(result)  # Output: 16
+# Basic function definition syntax
+def greet(name):
+    return f"Hello, {name}!"
+# Calling a function with arguments
+message = greet("Alice")
+# Returning values from a function
+print(message)  # Output: Hello, Alice!
 ```
 
 ---
 ---
-# Benefits of Using Functions in Python
-
-Python functions help streamline coding by reusing code, enhancing modularity, simplifying debugging, and improving overall readability for students.
+# Benefits of Using Functions
 
 - Code reusability
-- Modularity
-- Ease of debugging
 - Improved readability
+- Easier debugging and testing
+- Modularity
+- Efficient collaboration
 
+
+---
+---
+# Common Mistakes and How to Avoid Them
+
+<div grid="~ cols-2 gap-4">
+<div>
+
+## Option A
+
+- Forgetting to return a value
+  - Always ensure functions return a result if needed.
+- Incorrect parameter usage
+  - Check that parameters match expected input types.
+- Variable scope errors
+  - Use loc
+
+</div>
+<div>
+
+## Option B
+
+al variables to avoid unintended access.
+- Improper indentation
+  - Consistently use spaces or tabs, not both.
+- Misusing built-in function names
+  - Avoid naming variables the same as built-in functions.
+
+</div>
+</div>
 
 ---
 layout: center
@@ -67,8 +93,9 @@ class: text-center
 
 # Summary and Next Steps
 
-- Functions simplify programming by organizing code
-- Practice by creating your own functions
-- Explore advanced topics like lambda functions
-- Keep experimenting and learning
-- Embrace the power of Python functions to enhance your coding skills
+> **Summary and Next Steps**
+Understanding Python functions is crucial for effective coding. Practice consistently to master defining and using functions. Explore additional resources to deepen your knowledge. Embrace the journey of learning Python and unlock new opportunities. Keep coding, keep growing!
+
+— Unknown
+
+

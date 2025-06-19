@@ -1,0 +1,69 @@
+{
+  "title": "Presentation: Machine Learning Grundlagen",
+  "subtitle": "For Studenten audience",
+  "author": null,
+  "theme": "the-unnamed",
+  "slide_count": 7,
+  "generated_at": "2025-06-19T12:45:01.286979",
+  "generated_by": "slidev-agent",
+  "output_path": "slides/presentation-machine-learning-grundlagen",
+  "slides": [
+    {
+      "title": "Einführung in die Grundlagen des Machine Learning",
+      "type": "title",
+      "notes": "Generated for topic: Machine Learning Grundlagen",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Was ist Machine Learning?",
+      "type": "bullets",
+      "notes": "Generated for topic: Machine Learning Grundlagen",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Wichtige Algorithmen im Machine Learning",
+      "type": "bullets",
+      "notes": "Generated for topic: Machine Learning Grundlagen",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Ein einfaches Beispiel in Python",
+      "type": "code",
+      "notes": "Generated for topic: Machine Learning Grundlagen",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Vorteile und Herausforderungen von Machine Learning",
+      "type": "comparison",
+      "notes": "Generated for topic: Machine Learning Grundlagen",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Anwendungen von Machine Learning",
+      "type": "bullets",
+      "notes": "Generated for topic: Machine Learning Grundlagen",
+      "layout": null,
+      "transition": null
+    },
+    {
+      "title": "Zusammenfassung und Ausblick",
+      "type": "quote",
+      "notes": "Generated for topic: Machine Learning Grundlagen",
+      "layout": null,
+      "transition": null
+    }
+  ],
+  "fonts": null,
+  "css": null,
+  "metadata": {
+    "generated_by": "slidev-agent",
+    "topic": "Machine Learning Grundlagen",
+    "slide_count": 7,
+    "language": "de"
+  }
+}

@@ -1,6 +1,10 @@
 # {{ title }}
 
-{{ subtitle if subtitle else content }}
+{% if subtitle -%}
+{{ subtitle }}
+{%- else -%}
+{{ clean_content if clean_content else content_summary if content_summary else 'Welcome to this presentation' }}
+{%- endif %}
 
 {% if click_to_next -%}
 <div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">

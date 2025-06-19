@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slidev Agent - AI-Powered Slide Generation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .description {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+        .cta {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+            margin: 0.5rem;
+        }
+        .cta:hover {
+            transform: scale(1.05);
+            color: white;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 3rem 0;
+        }
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .feature h3 {
+            margin-top: 0;
+            color: #4ecdc4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎛️ Slidev Agent</h1>
+        <p class="subtitle">AI-Powered Slide Generation</p>
+        
+        <p class="description">
+            Transform simple topic descriptions into beautiful, interactive Slidev presentations 
+            using LangGraph and OpenAI GPT-4o with structured function calling.
+        </p>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🤖 AI-Powered</h3>
+                <p>Uses GPT-4o with function calling for reliable, structured slide generation</p>
+            </div>
+            <div class="feature">
+                <h3>🔧 LangGraph</h3>
+                <p>Robust workflow orchestration with automatic error handling and fallbacks</p>
+            </div>
+            <div class="feature">
+                <h3>🎨 Slidev</h3>
+                <p>Beautiful, interactive presentations with modern web technologies</p>
+            </div>
+        </div>
+        
+        <a href="https://github.com/MariusSuessmilch/slidev-agent" class="cta">View on GitHub</a>
+        <a href="#" class="cta" onclick="alert('Demo will be available after deployment!')">View Demos</a>
+    </div>
+</body>
+</html>

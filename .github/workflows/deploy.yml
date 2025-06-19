@@ -1,0 +1,290 @@
+name: Deploy Slidev Agent to GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Setup @antfu/ni
+        run: npm i -g @antfu/ni
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Generate Demo Presentations
+        run: |
+          # Generate demo presentations for showcase
+          uv run python -m slide_agent.cli "Python Functions" --audience "students" --slide-count 6 --language "en"
+          uv run python -m slide_agent.cli "Machine Learning Grundlagen" --audience "Studenten" --slide-count 7 --language "de"  
+          uv run python -m slide_agent.cli "Web Development Basics" --audience "beginners" --slide-count 5 --language "en"
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Install dependencies and build Python Functions
+        run: |
+          cd slides/presentation-python-functions
+          nci
+          nr build --base /${{github.event.repository.name}}/python-functions/
+
+      - name: Install dependencies and build Machine Learning
+        run: |
+          cd slides/presentation-machine-learning-grundlagen
+          nci
+          nr build --base /${{github.event.repository.name}}/machine-learning/
+
+      - name: Install dependencies and build Web Development
+        run: |
+          cd slides/presentation-web-development-basics
+          nci
+          nr build --base /${{github.event.repository.name}}/web-development/
+
+      - name: Create demo showcase
+        run: |
+          mkdir -p dist
+
+          # Create main demo index
+          cat > dist/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Slidev Agent - AI-Powered Slide Generation</title>
+              <style>
+                  body {
+                      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                      max-width: 1200px;
+                      margin: 0 auto;
+                      padding: 2rem;
+                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                      min-height: 100vh;
+                      color: white;
+                  }
+                  .header {
+                      text-align: center;
+                      margin-bottom: 3rem;
+                  }
+                  .header h1 {
+                      font-size: 3rem;
+                      margin-bottom: 1rem;
+                      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                      -webkit-background-clip: text;
+                      -webkit-text-fill-color: transparent;
+                      background-clip: text;
+                  }
+                  .subtitle {
+                      font-size: 1.2rem;
+                      opacity: 0.9;
+                      margin-bottom: 2rem;
+                  }
+                  .presentations {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                      gap: 2rem;
+                      margin-bottom: 3rem;
+                  }
+                  .presentation-card {
+                      background: rgba(255, 255, 255, 0.1);
+                      backdrop-filter: blur(10px);
+                      border-radius: 15px;
+                      padding: 2rem;
+                      border: 1px solid rgba(255, 255, 255, 0.2);
+                      transition: transform 0.3s ease, box-shadow 0.3s ease;
+                  }
+                  .presentation-card:hover {
+                      transform: translateY(-5px);
+                      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                  }
+                  .presentation-card h3 {
+                      margin-top: 0;
+                      color: #4ecdc4;
+                      font-size: 1.5rem;
+                  }
+                  .meta {
+                      display: flex;
+                      gap: 1rem;
+                      margin: 1rem 0;
+                      font-size: 0.9rem;
+                      opacity: 0.8;
+                  }
+                  .tag {
+                      background: rgba(255, 255, 255, 0.2);
+                      padding: 0.25rem 0.75rem;
+                      border-radius: 20px;
+                      font-size: 0.8rem;
+                  }
+                  .view-btn {
+                      display: inline-block;
+                      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                      color: white;
+                      text-decoration: none;
+                      padding: 0.75rem 1.5rem;
+                      border-radius: 25px;
+                      font-weight: bold;
+                      transition: transform 0.2s ease;
+                      margin-top: 1rem;
+                  }
+                  .view-btn:hover {
+                      transform: scale(1.05);
+                      color: white;
+                  }
+                  .footer {
+                      text-align: center;
+                      margin-top: 3rem;
+                      padding-top: 2rem;
+                      border-top: 1px solid rgba(255, 255, 255, 0.2);
+                      opacity: 0.7;
+                  }
+                  .github-link {
+                      color: #4ecdc4;
+                      text-decoration: none;
+                      font-weight: bold;
+                  }
+                  .github-link:hover {
+                      text-decoration: underline;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="header">
+                  <h1>🎛️ Slidev Agent</h1>
+                  <p class="subtitle">AI-powered slide generation using LangGraph and OpenAI GPT-4o</p>
+                  <p>Transform simple topic descriptions into beautiful, interactive Slidev presentations with function calling architecture</p>
+              </div>
+
+              <div class="presentations">
+                  <div class="presentation-card">
+                      <h3>🐍 Python Functions</h3>
+                      <p>Introduction to Python functions for students, covering basic concepts, syntax, and practical examples.</p>
+                      <div class="meta">
+                          <span class="tag">🎯 Students</span>
+                          <span class="tag">🇺🇸 English</span>
+                          <span class="tag">📄 6 Slides</span>
+                      </div>
+                      <a href="./python-functions/" class="view-btn">View Presentation →</a>
+                  </div>
+
+                  <div class="presentation-card">
+                      <h3>🤖 Machine Learning Grundlagen</h3>
+                      <p>Einführung in die Grundlagen des maschinellen Lernens für deutsche Studenten.</p>
+                      <div class="meta">
+                          <span class="tag">🎓 Studenten</span>
+                          <span class="tag">🇩🇪 Deutsch</span>
+                          <span class="tag">📄 7 Slides</span>
+                      </div>
+                      <a href="./machine-learning/" class="view-btn">Präsentation anzeigen →</a>
+                  </div>
+
+                  <div class="presentation-card">
+                      <h3>🌐 Web Development Basics</h3>
+                      <p>Essential web development concepts and technologies for beginners starting their coding journey.</p>
+                      <div class="meta">
+                          <span class="tag">👶 Beginners</span>
+                          <span class="tag">🇺🇸 English</span>
+                          <span class="tag">📄 5 Slides</span>
+                      </div>
+                      <a href="./web-development/" class="view-btn">View Presentation →</a>
+                  </div>
+              </div>
+
+              <div class="footer">
+                  <p>
+                      Generated automatically by 
+                      <a href="https://github.com/MariusSuessmilch/slidev-agent" class="github-link">Slidev Agent</a>
+                      using LangGraph, OpenAI GPT-4o, and Slidev
+                  </p>
+                  <p><strong>M5 Implementation:</strong> Complete CI/CD pipeline with function calling architecture</p>
+              </div>
+          </body>
+          </html>
+          EOF
+
+          # Copy presentation builds
+          mkdir -p dist/python-functions
+          cp -r slides/presentation-python-functions/dist/* dist/python-functions/
+
+          mkdir -p dist/machine-learning
+          cp -r slides/presentation-machine-learning-grundlagen/dist/* dist/machine-learning/
+
+          mkdir -p dist/web-development
+          cp -r slides/presentation-web-development-basics/dist/* dist/web-development/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  smoke-test:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Smoke Test - Main Page
+        run: |
+          URL="${{ needs.deploy.outputs.page_url || 'https://mariussuessmilch.github.io/slidev-agent/' }}"
+          echo "Testing main page: $URL"
+          
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          echo "HTTP Status: $RESPONSE"
+          
+          if [ "$RESPONSE" != "200" ]; then
+            echo "❌ Smoke test failed: Expected 200, got $RESPONSE"
+            exit 1
+          fi
+          
+          echo "✅ Main page accessible"
+
+      - name: Smoke Test - Demo Presentations  
+        run: |
+          BASE_URL="${{ needs.deploy.outputs.page_url || 'https://mariussuessmilch.github.io/slidev-agent/' }}"
+          
+          for demo in python-functions machine-learning web-development; do
+            URL="${BASE_URL}${demo}/"
+            RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            echo "${demo}: $RESPONSE"
+            
+            if [ "$RESPONSE" != "200" ]; then
+              echo "❌ ${demo} demo failed"
+              exit 1
+            fi
+          done
+          
+          echo "✅ All demos accessible"
+          echo "🚀 Deployment successful: $BASE_URL"
