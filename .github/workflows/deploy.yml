@@ -48,6 +48,13 @@ jobs:
           for dir in slides/presentation-*/; do
             if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
               presentation_name=$(basename "$dir" | sed 's/presentation-//')
+
+              # Skip presentations with special characters that cause URL encoding issues
+              if echo "$presentation_name" | grep -q '[äöüÄÖÜß]'; then
+                echo "Skipping: $presentation_name (contains special characters)"
+                continue
+              fi
+
               echo "Building: $presentation_name"
               cd "$dir"
               npm install
@@ -194,6 +201,12 @@ jobs:
             if [ -d "$dir" ] && [ -f "$dir/meta.json" ]; then
               presentation_name=$(basename "$dir" | sed 's/presentation-//')
 
+              # Skip presentations with special characters for URL compatibility
+              if echo "$presentation_name" | grep -q '[äöüÄÖÜß]'; then
+                echo "Skipping showcase entry: $presentation_name (contains special characters)"
+                continue
+              fi
+
               # Extract metadata from meta.json
               title=$(cat "$dir/meta.json" | python3 -c "import sys,json; print(json.load(sys.stdin)['title'])" 2>/dev/null || echo "Unknown Title")
               subtitle=$(cat "$dir/meta.json" | python3 -c "import sys,json; print(json.load(sys.stdin).get('subtitle', ''))" 2>/dev/null || echo "")
@@ -255,10 +268,17 @@ jobs:
           </html>
           SCRIPT_EOF
 
-          # Copy all presentation builds dynamically
+          # Copy all presentation builds dynamically (skip special characters)
           for dir in slides/presentation-*/; do
             if [ -d "$dir" ] && [ -d "$dir/dist" ]; then
               presentation_name=$(basename "$dir" | sed 's/presentation-//')
+
+              # Skip presentations with special characters
+              if echo "$presentation_name" | grep -q '[äöüÄÖÜß]'; then
+                echo "Skipping copy: $presentation_name (contains special characters)"
+                continue
+              fi
+
               echo "Copying: $presentation_name"
               mkdir -p "dist/$presentation_name"
               cp -r "$dir/dist/"* "dist/$presentation_name/"
