@@ -35,38 +35,32 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v3
 
-      - name: Generate Demo Presentations
+      - name: Generate Fresh Demo Presentation
         run: |
-          # Generate demo presentations for showcase
-          uv run python -m slide_agent.cli "Python Functions" --audience "students" --slide-count 6 --language "en"
-          uv run python -m slide_agent.cli "Machine Learning Grundlagen" --audience "Studenten" --slide-count 7 --language "de"
-          uv run python -m slide_agent.cli "Web Development Basics" --audience "beginners" --slide-count 5 --language "en"
+          # Generate one fresh demo presentation
+          uv run python -m slide_agent.cli "Python Funktionen" --audience "Studenten" --slide-count 6 --language "de"
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
-      - name: Install dependencies and build Python Functions
+      - name: Build All Presentations
         run: |
-          cd slides/presentation-python-functions
-          npm install
-          npm run build -- --base /${{github.event.repository.name}}/python-functions/
-
-      - name: Install dependencies and build Machine Learning
-        run: |
-          cd slides/presentation-machine-learning-grundlagen
-          npm install
-          npm run build -- --base /${{github.event.repository.name}}/machine-learning/
-
-      - name: Install dependencies and build Web Development
-        run: |
-          cd slides/presentation-web-development-basics
-          npm install
-          npm run build -- --base /${{github.event.repository.name}}/web-development/
+          # Build all presentations in slides folder
+          for dir in slides/presentation-*/; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              presentation_name=$(basename "$dir" | sed 's/presentation-//')
+              echo "Building: $presentation_name"
+              cd "$dir"
+              npm install
+              npm run build -- --base /${{github.event.repository.name}}/$presentation_name/
+              cd - > /dev/null
+            fi
+          done
 
       - name: Create demo showcase
         run: |
           mkdir -p dist
 
-          # Create main demo index
+          # Generate dynamic showcase from all presentations
           cat > dist/index.html << 'EOF'
           <!DOCTYPE html>
           <html lang="en">
@@ -176,39 +170,8 @@ jobs:
                   <p>Transform simple topic descriptions into beautiful, interactive Slidev presentations with function calling architecture</p>
               </div>
 
-              <div class="presentations">
-                  <div class="presentation-card">
-                      <h3>🐍 Python Functions</h3>
-                      <p>Introduction to Python functions for students, covering basic concepts, syntax, and practical examples.</p>
-                      <div class="meta">
-                          <span class="tag">🎯 Students</span>
-                          <span class="tag">🇺🇸 English</span>
-                          <span class="tag">📄 6 Slides</span>
-                      </div>
-                      <a href="./python-functions/" class="view-btn">View Presentation →</a>
-                  </div>
-
-                  <div class="presentation-card">
-                      <h3>🤖 Machine Learning Grundlagen</h3>
-                      <p>Einführung in die Grundlagen des maschinellen Lernens für deutsche Studenten.</p>
-                      <div class="meta">
-                          <span class="tag">🎓 Studenten</span>
-                          <span class="tag">🇩🇪 Deutsch</span>
-                          <span class="tag">📄 7 Slides</span>
-                      </div>
-                      <a href="./machine-learning/" class="view-btn">Präsentation anzeigen →</a>
-                  </div>
-
-                  <div class="presentation-card">
-                      <h3>🌐 Web Development Basics</h3>
-                      <p>Essential web development concepts and technologies for beginners starting their coding journey.</p>
-                      <div class="meta">
-                          <span class="tag">👶 Beginners</span>
-                          <span class="tag">🇺🇸 English</span>
-                          <span class="tag">📄 5 Slides</span>
-                      </div>
-                      <a href="./web-development/" class="view-btn">View Presentation →</a>
-                  </div>
+              <div class="presentations" id="presentations">
+                  <!-- Presentations will be dynamically generated -->
               </div>
 
               <div class="footer">
@@ -223,15 +186,84 @@ jobs:
           </html>
           EOF
 
-          # Copy presentation builds
-          mkdir -p dist/python-functions
-          cp -r slides/presentation-python-functions/dist/* dist/python-functions/
+          # Generate presentation cards dynamically
+          echo "          <script>" >> dist/index.html
+          echo "          const presentations = [" >> dist/index.html
 
-          mkdir -p dist/machine-learning
-          cp -r slides/presentation-machine-learning-grundlagen/dist/* dist/machine-learning/
+          for dir in slides/presentation-*/; do
+            if [ -d "$dir" ] && [ -f "$dir/meta.json" ]; then
+              presentation_name=$(basename "$dir" | sed 's/presentation-//')
 
-          mkdir -p dist/web-development
-          cp -r slides/presentation-web-development-basics/dist/* dist/web-development/
+              # Extract metadata from meta.json
+              title=$(cat "$dir/meta.json" | python3 -c "import sys,json; print(json.load(sys.stdin)['title'])" 2>/dev/null || echo "Unknown Title")
+              subtitle=$(cat "$dir/meta.json" | python3 -c "import sys,json; print(json.load(sys.stdin).get('subtitle', ''))" 2>/dev/null || echo "")
+              slide_count=$(cat "$dir/meta.json" | python3 -c "import sys,json; print(json.load(sys.stdin)['slide_count'])" 2>/dev/null || echo "0")
+
+              # Infer language and audience from subtitle or metadata
+              if echo "$subtitle" | grep -qi "deutsch\|studenten\|german"; then
+                language="🇩🇪 Deutsch"
+                audience="🎓 Studenten"
+                view_text="Präsentation anzeigen →"
+              else
+                language="🇺🇸 English"
+                audience="🎯 Students"
+                view_text="View Presentation →"
+              fi
+
+              # Generate emoji based on topic
+              emoji="📊"
+              if echo "$title" | grep -qi "python\|function"; then emoji="🐍"; fi
+              if echo "$title" | grep -qi "machine\|learning\|ml"; then emoji="🤖"; fi
+              if echo "$title" | grep -qi "web\|development"; then emoji="🌐"; fi
+              if echo "$title" | grep -qi "data\|science"; then emoji="📈"; fi
+              if echo "$title" | grep -qi "neural\|network"; then emoji="🧠"; fi
+              if echo "$title" | grep -qi "deep"; then emoji="🔥"; fi
+
+              echo "            {" >> dist/index.html
+              echo "              title: \"$emoji $title\"," >> dist/index.html
+              echo "              description: \"$subtitle\"," >> dist/index.html
+              echo "              audience: \"$audience\"," >> dist/index.html
+              echo "              language: \"$language\"," >> dist/index.html
+              echo "              slideCount: \"$slide_count Slides\"," >> dist/index.html
+              echo "              link: \"./$presentation_name/\"," >> dist/index.html
+              echo "              viewText: \"$view_text\"" >> dist/index.html
+              echo "            }," >> dist/index.html
+            fi
+          done
+
+          cat >> dist/index.html << 'SCRIPT_EOF'
+          ];
+
+          const container = document.getElementById('presentations');
+          presentations.forEach(pres => {
+            const card = document.createElement('div');
+            card.className = 'presentation-card';
+            card.innerHTML = `
+              <h3>${pres.title}</h3>
+              <p>${pres.description || 'AI-generated presentation with comprehensive content and examples.'}</p>
+              <div class="meta">
+                <span class="tag">${pres.audience}</span>
+                <span class="tag">${pres.language}</span>
+                <span class="tag">📄 ${pres.slideCount}</span>
+              </div>
+              <a href="${pres.link}" class="view-btn">${pres.viewText}</a>
+            `;
+            container.appendChild(card);
+          });
+          </script>
+          </body>
+          </html>
+          SCRIPT_EOF
+
+          # Copy all presentation builds dynamically
+          for dir in slides/presentation-*/; do
+            if [ -d "$dir" ] && [ -d "$dir/dist" ]; then
+              presentation_name=$(basename "$dir" | sed 's/presentation-//')
+              echo "Copying: $presentation_name"
+              mkdir -p "dist/$presentation_name"
+              cp -r "$dir/dist/"* "dist/$presentation_name/"
+            fi
+          done
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
